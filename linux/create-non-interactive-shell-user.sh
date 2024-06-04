@@ -1,0 +1,1 @@
+adduser mark -s /sbin/nologin

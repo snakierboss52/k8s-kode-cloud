@@ -1,0 +1,1 @@
+k rollout undo deployment/nginx-deployment

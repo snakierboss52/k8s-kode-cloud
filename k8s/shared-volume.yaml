@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-share-devops
+spec:
+  volumes:
+    - name: volume-share
+      emptyDir: {}
+  containers:
+    - name: volume-container-devops-1
+      image: ubuntu:latest
+      command: ["/bin/bash", "-c", "sleep 10000"]
+      volumeMounts:
+        - mountPath: /tmp/media
+          name: volume-share
+    - name: volume-container-devops-2
+      image: ubuntu:latest
+      command: ["/bin/bash", "-c", "sleep 10000"]
+      volumeMounts:
+        - mountPath: /tmp/games
+          name: volume-share
+
+#k exec -it volume-share-devops bash -c volume-container-devops-1

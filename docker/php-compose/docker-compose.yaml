@@ -1,0 +1,21 @@
+version: '3'
+services:
+  web:
+    container_name: php_web
+    image: php:8.3.7RC1-apache
+    ports:
+      - "80:6000"
+    volumes:
+      - /var/www/html:/var/www/html
+  db:
+    container_name: mysql_web
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=database_web
+      - MYSQL_ROOT_PASSWORD=abc#123
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=pT.v1Q9[W3`

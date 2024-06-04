@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: httpd-replicationcontroller
+  labels:
+    app: httpd_app
+    type: front-end
+spec:
+  replicas: 3
+  selector:
+    app: httpd_app
+  template:
+    metadata:
+      name: httpd_app
+      labels:
+        app: httpd_app
+    spec:
+      containers:
+      - name: httpd-container
+        image: httpd:latest

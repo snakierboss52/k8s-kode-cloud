@@ -1,0 +1,1 @@
+useradd -u 1376 -m -d /var/www/kareem kareem

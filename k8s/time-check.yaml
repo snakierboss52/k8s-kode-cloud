@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devops
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: time-check 
+  labels:
+    app: time-check
+  namespace: devops
+spec:
+  volumes:
+    - name: log-volume
+      emptyDir: {}
+  containers:
+    - name: time-check
+      image: busybox:latest
+      command: ["/bin/sh", "-c"]
+      args: [ "while true; do date; sleep $TIME_FREQ;done > /opt/data/time/time-check.log"]
+      envFrom:
+        - configMapRef: 
+            name: time-config
+      volumeMounts:
+        - mountPath: /opt/data/time
+          name: log-volume
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: time-config
+  labels:
+    app: time-check
+  namespace: devops
+data:
+  TIME_FREQ: "10"

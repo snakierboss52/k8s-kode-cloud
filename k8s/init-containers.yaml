@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ic-deploy-devops
+  labels:
+    app: ic-devops
+spec:
+  replicas: 1
+  #strategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxSurge: 1
+  #    maxUnavailable: 2
+  selector:
+    matchLabels:
+      app: ic-devops
+  template:
+    metadata:
+      labels:
+        app: ic-devops
+    spec:
+      volumes:
+        - name: ic-volume-devops
+          emptyDir: {}
+      initContainers:
+        - name: ic-msg-devops
+          image: centos:latest
+          command: ['/bin/bash', '-c', 'echo Init Done - Welcome to xFusionCorp Industries > /ic/news']
+          volumeMounts:
+            - name: ic-volume-devops
+              mountPath: /ic
+      containers:
+        - name: ic-main-devops
+          image: centos:latest
+          command: ['/bin/bash', '-c','while true; do cat /ic/news; sleep 5; done']
+          volumeMounts:
+            - name: ic-volume-devops
+              mountPath: /ic
