@@ -1,0 +1,17 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: cron-scaled-devops-tools
+  namespace: devops
+spec:
+  scaleTargetRef:
+    name: http-apache-devops-deployment
+  minReplicaCount: 0
+  cooldownPeriod: 300
+  triggers:
+  - type: cron
+    metadata:
+      timezone: America/Bogota
+      start: 0 6 * * *
+      end: 0 20 * * *
+      desiredReplicas: 7
