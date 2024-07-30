@@ -1,65 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
-data "aws_eks_cluster_auth" "cluster_auth" {
-  name = module.eks.cluster_name
-  depends_on = [ module.eks ]
-}
-
-data "aws_eks_cluster" "this" {
-  name = module.eks.cluster_name
-  depends_on = [ module.eks ]
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-    command     = "aws"
-  }
-}
-
-provider "kubectl" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-    command     = "aws"
-  }
-  load_config_file       = false
-}
-
-provider "helm" {
-  kubernetes {
-    host                   = data.aws_eks_cluster.this.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
-    exec {
-        api_version = "client.authentication.k8s.io/v1beta1"
-        args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-        command     = "aws"
-    }
-  }
-}
-
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "5.8.1"
-
-  name = "eks-vpc"
-  cidr = "10.0.0.0/16"
-
-  azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
-
-  enable_nat_gateway = true
-}
-
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.14.0"
@@ -85,7 +23,7 @@ module "eks" {
 
   eks_managed_node_group_defaults = {
     ami_type       = "AL2_x86_64"
-    instance_types = ["t3.small"]
+    instance_types = ["t3.micro"]
 
     attach_cluster_primary_security_group = true
   }
@@ -96,7 +34,7 @@ module "eks" {
       max_size     = 2
       desired_size = 1
 
-      instance_types = ["t3.small"]
+      instance_types = ["t3.micro"]
       capacity_type  = "SPOT"
 
       tags = {
