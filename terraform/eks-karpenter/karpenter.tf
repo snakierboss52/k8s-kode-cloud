@@ -60,9 +60,10 @@ resource "aws_iam_instance_profile" "karpenter" {
 }
 
 resource "kubernetes_namespace" "karpenter" {
-  metadata {
-    name = "karpenter"
-  }
+    depends_on = [ module.eks, aws_iam_instance_profile.karpenter ]
+    metadata {
+        name = "karpenter"
+    }
 }
 
 # Install Karpenter via Helm chart

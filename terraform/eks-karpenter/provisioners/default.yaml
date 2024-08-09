@@ -4,6 +4,12 @@ metadata:
   name: custom-provisioner
 spec:
   requirements:
-    - key: "karpenter.k8s.aws/instance-category"
+    - key: "node.kubernetes.io/instance-type"
       operator: In
-      values: ["t3a.small"]
+      values: ["t3a.small", t2.small]
+    #- key: karpenter.k8s.aws/instance-size
+    #  operator: In
+    #  values: ["nano", "micro", "small"]        
+    - key: karpenter.sh/capacity-type
+      operator: In
+      values: ["spot"]

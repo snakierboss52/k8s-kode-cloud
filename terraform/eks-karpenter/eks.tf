@@ -30,14 +30,14 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    amc-cluster-wg = {
+    karpenter = {
+      ami_type       = "AL2_x86_64"
       min_size     = 0
-      max_size     = 2
+      max_size     = 3
       desired_size = 1
 
-      instance_types = ["t3.micro"]
+      instance_types = ["t3.small", "t2.small"]
       capacity_type  = "SPOT"
-
       tags = {
         name = "dev-cluster"
       }

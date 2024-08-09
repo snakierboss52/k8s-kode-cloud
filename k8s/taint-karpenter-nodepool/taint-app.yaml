@@ -1,0 +1,16 @@
+apiVersion: karpenter.sh/v1beta1
+kind: NodePool
+metadata:
+  name: apps
+spec:
+  template:
+    spec:
+      requirements:
+      - key: karpenter.k8s.aws/instance-type
+        operator: In
+        values:
+          - t3a.small
+      taints:
+      - key: apps
+        value: "true"
+        effect: "NoSchedule"

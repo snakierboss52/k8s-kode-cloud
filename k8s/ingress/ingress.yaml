@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: httpd-ingress
+  namespace: devops
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: test.apache.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: httpd-service
+                port:
+                  number: 8080
+
+#curl --resolve "http-test.dev:80:MINIKUBE_IP" -i http://http-test.dev
